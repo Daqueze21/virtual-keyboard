@@ -727,7 +727,7 @@ window.onload = function() {
           localStorage.capslock === 'false' &&
           localStorage.isEng === 'false'
         ) {
-          console.log('first'); 
+          console.log('first');
           changeKeyboardSymbols(rusKeys);
         } else if (
           localStorage.capslock === 'true' &&
