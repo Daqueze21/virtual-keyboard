@@ -650,8 +650,36 @@ window.onload = function() {
 
   // mouse click event
   document.querySelectorAll('.keyboard__btn').forEach(e => {
+    e.addEventListener('mouseup', event => {
+      // console.log(event.target.getAttribute('code'));
+      let element = document.querySelectorAll(
+        `div[code="${event.target.getAttribute('code')}"]`
+      );
 
-   
+      // rules for spec buttons
+      if (element.length == 1) {
+        element = element[0];
+        if (element.innerText == 'Backspace') {
+          text = text.substr(0, text.length - 1);
+        } else if (element.innerText === 'Enter') {
+          text += '\n';
+        } else if (element.innerText === '') {
+          text += ' ';
+        } else if (element.innerText === 'Tab') {
+          text += '   ';
+        } else if (element.innerText === 'Caps Lock') {
+          text += '';
+        } else if (
+          element.key != 'Control' ||
+          element.key != 'Shift' ||
+          element.key != 'Alt' ||
+          element.key != 'ContextMenu'
+        ) {
+          text += element.innerText;
+        }
+        document.querySelector('#textarea').value = text;
+      }
+    });
   });
 
   window.addEventListener('beforeunload', () => {
