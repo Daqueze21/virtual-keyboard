@@ -500,6 +500,30 @@ window.onload = function() {
 
   addSpecBtnId();
 
+  function Shift() {
+    if (
+      localStorage.capslock === null ||
+      (localStorage.capslock === 'false' && localStorage.isEng == 'false')
+    ) {
+      changeKeyboardSymbols(rusKeysShift);
+    } else if (
+      localStorage.capslock === 'true' &&
+      localStorage.isEng === 'false'
+    ) {
+      changeKeyboardSymbols(rusKeys);
+    } else if (
+      localStorage.capslock === 'false' &&
+      localStorage.isEng === 'true'
+    ) {
+      changeKeyboardSymbols(engKeysShift);
+    } else if (
+      localStorage.capslock === 'true' &&
+      localStorage.isEng === 'true'
+    ) {
+      changeKeyboardSymbols(engKeys);
+    }
+  }
+
   function keydown(event) {
     if (
       event.code === 'ControlRight' ||
@@ -540,6 +564,42 @@ window.onload = function() {
       document.querySelector('#textarea').value = text;
     }
 
+    // change lang
+    if (
+      event.code == 'ControlLeft' &&
+      localStorage.isEng == 'false' &&
+      localStorage.capslock == 'false'
+    ) {
+      localStorage.setItem('isEng', true);
+      changeKeyboardSymbols(engKeys);
+    } else if (
+      event.code == 'ControlLeft' &&
+      localStorage.isEng == 'false' &&
+      localStorage.capslock == 'true'
+    ) {
+      localStorage.setItem('isEng', true);
+      changeKeyboardSymbols(engKeysCaps);
+    } else if (
+      event.code == 'ControlLeft' &&
+      localStorage.isEng == 'true' &&
+      localStorage.capslock == 'false'
+    ) {
+      localStorage.setItem('isEng', false);
+      changeKeyboardSymbols(rusKeys);
+    } else if (
+      event.code == 'ControlLeft' &&
+      localStorage.isEng == 'true' &&
+      localStorage.capslock == 'true'
+    ) {
+      localStorage.setItem('isEng', false);
+      changeKeyboardSymbols(rusKeysCaps);
+    }
+
+    // uppercase on shift
+    if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+      Shift();
+    }
+
     event.preventDefault();
   }
 
@@ -557,6 +617,28 @@ window.onload = function() {
     } else {
       document.querySelector(`.c${event.keyCode}`).classList.remove('keydown');
     }
+
+    // shift rules
+    if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+      if (localStorage.capslock === 'false' && localStorage.isEng === 'false') {
+        changeKeyboardSymbols(rusKeys);
+      } else if (
+        localStorage.capslock === 'true' &&
+        localStorage.isEng === 'false'
+      ) {
+        changeKeyboardSymbols(rusKeysCaps);
+      } else if (
+        localStorage.capslock === 'false' &&
+        localStorage.isEng === 'true'
+      ) {
+        changeKeyboardSymbols(engKeys);
+      } else if (
+        localStorage.capslock === 'true' &&
+        localStorage.isEng === 'true'
+      ) {
+        changeKeyboardSymbols(engKeysCaps);
+      }
+    }
   }
 
   // events
@@ -567,7 +649,10 @@ window.onload = function() {
   document.addEventListener('keyup', keyup);
 
   // mouse click event
-  document.querySelectorAll('.keyboard__btn').forEach(e => {});
+  document.querySelectorAll('.keyboard__btn').forEach(e => {
+
+   
+  });
 
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('isEng', false);
