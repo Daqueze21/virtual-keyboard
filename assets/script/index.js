@@ -454,6 +454,15 @@ window.onload = function() {
   const body = document.querySelector('body');
   body.insertAdjacentHTML('afterbegin', textarea);
 
+  // change symbols on keyboard
+  function changeKeyboardSymbols(lettersArray) {
+    const buttons = document.querySelectorAll('.keyboard__btn');
+
+    buttons.forEach((el, val) => {
+      el.textContent = lettersArray[val];
+    });
+  }
+
   // add buttons
   function buttonsCreation() {
     for (const key of Object.keys(keyboardKeys)) {
@@ -468,7 +477,6 @@ window.onload = function() {
         btn.setAttribute('code', keyboardKeys[key][i]);
         row.append(btn);
       }
-
       changeKeyboardSymbols(rusKeys);
     }
   }
@@ -492,13 +500,63 @@ window.onload = function() {
 
   addSpecBtnId();
 
-  // change symbols on keyboard
-  function changeKeyboardSymbols(lettersArray) {
-    const buttons = document.querySelectorAll('.keyboard__btn');
+  function keydown(event) {
+    if (
+      event.code === 'ControlRight' ||
+      event.code === 'AltRight' ||
+      event.code === 'ShiftRight'
+    ) {
+      document
+        .querySelector(`#${event.code.toLowerCase()}`)
+        .classList.add('keydown');
+    } else {
+      document.querySelector(`.c${event.keyCode}`).classList.add('keydown');
+    }
 
-    buttons.forEach((el, val) => {
-      el.textContent = lettersArray[val];
-    });
+    // text output
+    let element = document.querySelectorAll(`div[code="${event.keyCode}"]`);
+
+    if (element.length == 1) {
+      element = element[0];
+      if (element.innerText == 'Backspace') {
+        text = text.substr(0, text.length - 1);
+      } else if (element.innerText == 'Enter') {
+        text += '\n';
+      } else if (element.innerText == '') {
+        text += ' ';
+      } else if (element.innerText == 'Tab') {
+        text += '   ';
+      } else if (element.innerText == 'Caps Lock') {
+        text += '';
+      } else if (
+        element.key != 'Control' ||
+        element.key != 'Shift' ||
+        element.key != 'Alt' ||
+        element.key != 'ContextMenu' ||
+        element.key != 'Meta'
+      ) {
+        text += element.innerText;
+      }
+      document.querySelector('#textarea').value = text;
+    }
+
+    event.preventDefault();
+  }
+
+  function keyup(event) {
+    console.log(event, event.keyCode, event.code);
+    //  document.querySelector('.keydown').classList.remove('keydown');
+    if (
+      event.code == 'AltRight' ||
+      event.code == 'ControlRight' ||
+      event.code == 'ShiftRight'
+    ) {
+      document
+        .querySelector(`#${event.code.toLowerCase()}`)
+        .classList.remove('keydown');
+    } else {
+      document.querySelector(`.c${event.keyCode}`).classList.remove('keydown');
+    }
   }
 
   // events
@@ -506,17 +564,10 @@ window.onload = function() {
   document.addEventListener('keydown', keydown);
 
   // keyup
-  document.addEventListener('keyup', function(event) {
-
-  });
+  document.addEventListener('keyup', keyup);
 
   // mouse click event
-  document.querySelectorAll('.keyboard__btn').forEach(e => {
-
-  });
-
-
-
+  document.querySelectorAll('.keyboard__btn').forEach(e => {});
 
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('isEng', false);
