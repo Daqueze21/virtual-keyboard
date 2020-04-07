@@ -453,5 +453,50 @@ window.onload = function() {
   let text = '';
   const body = document.querySelector('body');
   body.insertAdjacentHTML('afterbegin', textarea);
+
+  // add buttons
+  function buttonsCreation() {
+    for (const key of Object.keys(keyboardKeys)) {
+      const row = document.createElement('div');
+      row.setAttribute('class', 'keyboard__row');
+      row.setAttribute('id', `${key}`);
+      keyboard.append(row);
+
+      for (let i = 0; i < keyboardKeys[key].length; i++) {
+        const btn = document.createElement('div');
+        btn.setAttribute('class', `keyboard__btn c${keyboardKeys[key][i]}`);
+        btn.setAttribute('code', keyboardKeys[key][i]);
+        row.append(btn);
+      }
+
+      changeKeyboardSymbols(rusKeys);
+    }
+  }
+
+  buttonsCreation();
+
+  // add spec buttons id
+  function addSpecBtnId() {
+    specBtnNumb.forEach((el, val) => {
+      const domElem = document.querySelectorAll(`.c${el}`);
+
+      domElem[0].setAttribute('id', specBtnId[val]);
+      if (domElem.length > 1) {
+        domElem[0].setAttribute('id', `${specBtnId[val]}left`);
+        domElem[1].setAttribute('id', `${specBtnId[val]}right`);
+      } else {
+        domElem[0].setAttribute('id', specBtnId[val]);
+      }
+    });
+  }
+
+  addSpecBtnId();
+
+
+
   
+  window.addEventListener('beforeunload', () => {
+    localStorage.setItem('isEng', false);
+    localStorage.setItem('capslock', false);
+  });
 };
