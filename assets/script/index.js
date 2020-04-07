@@ -500,6 +500,35 @@ window.onload = function() {
 
   addSpecBtnId();
 
+  function CapsLock() {
+    if (
+      localStorage.capslock == null ||
+      (localStorage.capslock == 'false' && localStorage.isEng == 'false') ||
+      localStorage.isEng == null
+    ) {
+      localStorage.setItem('capslock', true);
+      changeKeyboardSymbols(rusKeysCaps);
+    } else if (
+      localStorage.capslock == null ||
+      (localStorage.capslock == 'false' && localStorage.isEng == 'true')
+    ) {
+      localStorage.setItem('capslock', true);
+      changeKeyboardSymbols(engKeysCaps);
+    } else if (
+      localStorage.capslock == 'true' &&
+      localStorage.isEng == 'false'
+    ) {
+      localStorage.setItem('capslock', false);
+      changeKeyboardSymbols(rusKeys);
+    } else if (
+      localStorage.capslock === 'true' &&
+      localStorage.isEng === 'true'
+    ) {
+      localStorage.setItem('capslock', false);
+      changeKeyboardSymbols(engKeys);
+    }
+  }
+
   function Shift() {
     if (
       localStorage.capslock === null ||
@@ -604,7 +633,7 @@ window.onload = function() {
   }
 
   function keyup(event) {
-    console.log(event, event.keyCode, event.code);
+   //  console.log(event, event.keyCode, event.code);
     //  document.querySelector('.keydown').classList.remove('keydown');
     if (
       event.code == 'AltRight' ||
@@ -650,6 +679,7 @@ window.onload = function() {
 
   // mouse click event
   document.querySelectorAll('.keyboard__btn').forEach(e => {
+
     e.addEventListener('mouseup', event => {
       // console.log(event.target.getAttribute('code'));
       let element = document.querySelectorAll(
@@ -678,6 +708,10 @@ window.onload = function() {
           text += element.innerText;
         }
         document.querySelector('#textarea').value = text;
+      }
+
+      if (element.innerText === 'Caps Lock') {
+        CapsLock();
       }
     });
   });
