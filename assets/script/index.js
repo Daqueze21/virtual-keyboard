@@ -492,9 +492,32 @@ window.onload = function() {
 
   addSpecBtnId();
 
+  // change symbols on keyboard
+  function changeKeyboardSymbols(lettersArray) {
+    const buttons = document.querySelectorAll('.keyboard__btn');
+
+    buttons.forEach((el, val) => {
+      el.textContent = lettersArray[val];
+    });
+  }
+
+  // events
+  // keydown
+  document.addEventListener('keydown', keydown);
+
+  // keyup
+  document.addEventListener('keyup', function(event) {
+
+  });
+
+  // mouse click event
+  document.querySelectorAll('.keyboard__btn').forEach(e => {
+
+  });
 
 
-  
+
+
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('isEng', false);
     localStorage.setItem('capslock', false);
