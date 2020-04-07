@@ -445,8 +445,7 @@ window.onload = function() {
   ];
 
   // init project
-  const textarea =
-    '<div class="display"><div class="screen"><textarea name="" id="textarea"></textarea></div></div>';
+  const textarea = `<div class="display"><div class="screen"><textarea name="" id="textarea"></textarea></div></div>`;
   const keyboard = document.createElement('div');
   keyboard.setAttribute('id', 'keyboard');
   document.body.prepend(keyboard);
@@ -633,8 +632,6 @@ window.onload = function() {
   }
 
   function keyup(event) {
-   //  console.log(event, event.keyCode, event.code);
-    //  document.querySelector('.keydown').classList.remove('keydown');
     if (
       event.code == 'AltRight' ||
       event.code == 'ControlRight' ||
@@ -645,6 +642,11 @@ window.onload = function() {
         .classList.remove('keydown');
     } else {
       document.querySelector(`.c${event.keyCode}`).classList.remove('keydown');
+    }
+
+    // capslock func
+    if (event.code === 'CapsLock') {
+      CapsLock();
     }
 
     // shift rules
@@ -679,9 +681,14 @@ window.onload = function() {
 
   // mouse click event
   document.querySelectorAll('.keyboard__btn').forEach(e => {
+    e.addEventListener('mousedown', event => {
+      // shift rules
+      if (event.target.innerHTML === 'Shift') {
+        Shift();
+      }
+    });
 
     e.addEventListener('mouseup', event => {
-      // console.log(event.target.getAttribute('code'));
       let element = document.querySelectorAll(
         `div[code="${event.target.getAttribute('code')}"]`
       );
@@ -712,6 +719,63 @@ window.onload = function() {
 
       if (element.innerText === 'Caps Lock') {
         CapsLock();
+      }
+
+      // shift rules
+      if (event.target.innerHTML === 'Shift') {
+        if (
+          localStorage.capslock === 'false' &&
+          localStorage.isEng === 'false'
+        ) {
+          console.log('first'); 
+          changeKeyboardSymbols(rusKeys);
+        } else if (
+          localStorage.capslock === 'true' &&
+          localStorage.isEng === 'false'
+        ) {
+          changeKeyboardSymbols(rusKeysCaps);
+        } else if (
+          localStorage.capslock === 'false' &&
+          localStorage.isEng === 'true'
+        ) {
+          changeKeyboardSymbols(engKeys);
+        } else if (
+          localStorage.capslock === 'true' &&
+          localStorage.isEng === 'true'
+        ) {
+          changeKeyboardSymbols(engKeysCaps);
+        }
+      }
+
+      // change lang
+      if (
+        event.target.innerHTML === 'Ctrl' &&
+        localStorage.isEng == 'false' &&
+        localStorage.capslock == 'false'
+      ) {
+        localStorage.setItem('isEng', true);
+        changeKeyboardSymbols(engKeys);
+      } else if (
+        event.target.innerHTML === 'Ctrl' &&
+        localStorage.isEng == 'false' &&
+        localStorage.capslock == 'true'
+      ) {
+        localStorage.setItem('isEng', true);
+        changeKeyboardSymbols(engKeysCaps);
+      } else if (
+        event.target.innerHTML === 'Ctrl' &&
+        localStorage.isEng == 'true' &&
+        localStorage.capslock == 'false'
+      ) {
+        localStorage.setItem('isEng', false);
+        changeKeyboardSymbols(rusKeys);
+      } else if (
+        event.target.innerHTML === 'Ctrl' &&
+        localStorage.isEng == 'true' &&
+        localStorage.capslock == 'true'
+      ) {
+        localStorage.setItem('isEng', false);
+        changeKeyboardSymbols(rusKeysCaps);
       }
     });
   });
